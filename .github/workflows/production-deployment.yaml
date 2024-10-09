@@ -1,0 +1,78 @@
+name: production Deployment
+on:
+  push:
+    branches:
+      - RELEASE*
+jobs:
+  build:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: 'projects/953434074437/locations/global/workloadIdentityPools/github-action/providers/github'
+          service_account: 'github-ci-sa@sqekyc-production.iam.gserviceaccount.com'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+      - name: Configure Docker to use the gcloud command-line tool as a credential helper
+        run: |-
+          # Set up docker to authenticate
+          # via gcloud command-line tool.
+          gcloud auth configure-docker
+          gcloud auth list
+      - name: Login to GCR
+        run: |-
+          # Login to Google Container Registry
+          gcloud auth configure-docker asia-southeast2-docker.pkg.dev
+      - name: Build Docker Image
+        run: |-
+          # Build the Docker image
+          docker build \
+          --build-arg service_type="rest" \
+          --build-arg service_env="production" \
+          -t asia-southeast2-docker.pkg.dev/sqekyc-production/sqekyc/production/backend:${{ github.sha }} .
+      - name: Push Docker Image to GCR
+        run: |-
+          # Push the Docker image to Google Container Registry
+          docker push asia-southeast2-docker.pkg.dev/sqekyc-production/sqekyc/production/backend:${{ github.sha }}
+  deploy:
+    name: Deploy to GKE
+    needs: build
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: 'projects/953434074437/locations/global/workloadIdentityPools/github-action/providers/github'
+          service_account: 'github-ci-sa@sqekyc-production.iam.gserviceaccount.com'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+      - name: Configure Docker to use the gcloud command-line tool as a credential helper
+        run: |-
+          # Set up docker to authenticate
+          # via gcloud command-line tool.
+          gcloud auth configure-docker
+          gcloud auth list
+      - name: Deploy to GKE
+        run: |-
+          # Set the compute zone
+          gcloud components install gke-gcloud-auth-plugin
+          gcloud config set compute/zone asia-southeast2
+          # Set the project
+          gcloud config set project sqekyc-production
+          # Set the cluster
+          gcloud container clusters get-credentials sqekyc-production-gke-cluster
+          # Deploy the Docker image to the cluster
+          kubectl set image deployment/sqekyc sqekyc=asia-southeast2-docker.pkg.dev/sqekyc-production/sqekyc/production/backend:${{ github.sha }}
+          # Wait for the rollout to complete
+          kubectl rollout status deployment/sqekyc
