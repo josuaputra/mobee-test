@@ -1,4 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
 resources:
-- job.yaml
+  - deployment.yaml  # Add any other resource files
+  - service.yaml
+
+commonLabels:
+  app: my-app  # Define common labels correctly
+  environment: production  # Adjust based on your overlay

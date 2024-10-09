@@ -16,11 +16,11 @@ spec:
     spec:
       containers:
         - name: go-app
-          image: your-image-name:latest
+          image: "image-tag"
           ports:
             - containerPort: 8080
           envFrom:
             - configMapRef:
                 name: app-configmap
             - secretRef:
-                name: db-credentials
+                name: app-secret

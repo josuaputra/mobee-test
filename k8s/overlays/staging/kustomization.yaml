@@ -1,6 +1,8 @@
-namespace: staging
-
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
-  - ../../base
+  - ../../base/
   - configmap.yaml
   - secret.yaml
+
+namespace : temp
