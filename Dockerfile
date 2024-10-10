@@ -14,12 +14,15 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main ./path/to/your/app
+RUN GOOS=linux GOARCH=amd64 go build -o main .
 
 # Start a new stage from scratch
 FROM alpine:latest
 
 WORKDIR /root/
+
+#Copy the .env file (if any) to the container (optional)
+COPY .env.example .env
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .

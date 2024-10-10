@@ -2,9 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - deployment.yaml  # Add any other resource files
-  - service.yaml
+- deployment.yaml
+- service.yaml
 
 labels:
-  app: my-app  # Define common labels correctly
-  environment: production  # Adjust based on your overlay
+- includeSelectors: true
+  pairs:
+    app: my-app
+    environment: staging

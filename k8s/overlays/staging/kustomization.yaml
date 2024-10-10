@@ -3,6 +3,5 @@ kind: Kustomization
 resources:
   - ../../base/
   - configmap.yaml
-  - secret.yaml
 
 namespace : temp

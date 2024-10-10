@@ -16,29 +16,30 @@ spec:
     spec:
       containers:
         - name: go-app
-          image: "image-tag"
+          image: image-tag
           ports:
             - containerPort: 8080
           env:
-          - name: DATABASE_URL
-            value: "postgresql://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable"
-          - name: DB_USERNAME
-            valueFrom:
-              configMapRef:
-                name: app-configmap
-                key: username
-          - name: DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-auth
-                key: mobee-password
-          - name: DB_HOST
-            valueFrom:
-              configMapRef:
-                name: app-configmap
-                key: host
-          - name: DB_NAME
-            valueFrom:
-              configMapRef:
-                name: app-configmap
-                key: dbname
+            - name: DATABASE_URL
+              value:
+                postgresql://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):5432/$(DB_NAME)?sslmode=disable
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configmap
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-auth
+                  key: mobee-password
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configmap
+                  key: DB_HOST
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configmap
+                  key: DB_NAME
