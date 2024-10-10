@@ -61,5 +61,5 @@ jobs:
         run: |
           # If using kustomize:
           cd ./k8s/overlays/staging
-          kustomize edit set image image-tag=${{ secrets.ECR_REPOSITORY_URL }}:${IMAGE_TAG}
+          kustomize edit set image image-tag=${{ secrets.ECR_REPOSITORY_URL }}:${{ env.IMAGE_TAG }}
           kustomize build --load-restrictor=LoadRestrictionsNone | kubectl apply -f -
