@@ -1,0 +1,8 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: my-app-cert
+spec:
+  dnsNames:
+    - staging.my-app.example.com
+  secretName: staging-my-app-tls-secret

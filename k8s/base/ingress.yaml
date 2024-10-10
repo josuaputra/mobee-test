@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-app-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod" # or letsencrypt-staging for testing
+spec:
+  rules:
+  - host: my-app.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: go-app-service
+            port:
+              number: 8080
+  tls:
+  - hosts:
+    - my-app.example.com
+    secretName: my-app-tls-secret
