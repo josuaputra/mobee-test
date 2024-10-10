@@ -24,7 +24,7 @@ jobs:
           # Get the current date and time to use as a tag
           TIMESTAMP=$(date +'%Y%m%d%H%M%S')
           # Set the image tag (you can customize this)
-          IMAGE_TAG="myapp:${TIMESTAMP}"
+          IMAGE_TAG=${TIMESTAMP}
           # Output the image tag as a GitHub Actions output
           echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
       - name: Build and push Docker image
