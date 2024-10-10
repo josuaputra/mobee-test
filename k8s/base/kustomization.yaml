@@ -5,6 +5,6 @@ resources:
   - deployment.yaml  # Add any other resource files
   - service.yaml
 
-commonLabels:
+labels:
   app: my-app  # Define common labels correctly
   environment: production  # Adjust based on your overlay

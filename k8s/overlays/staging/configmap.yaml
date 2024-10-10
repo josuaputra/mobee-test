@@ -4,3 +4,6 @@ metadata:
   name: app-configmap
 data:
   env_name: staging
+  DB_USERNAME: mobee
+  DB_HOST: postgresql
+  DB_NAME: mobeedb

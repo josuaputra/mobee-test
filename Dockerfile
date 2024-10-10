@@ -1,38 +1,31 @@
-# Step 1: Use official Go image as the build environment
-FROM golang:1.23-alpine AS build
+# Use the official Golang image to build the app
+FROM golang:1.23-alpine AS builder
 
-# Step 2: Set the current working directory inside the container
+# Set the Current Working Directory inside the container
 WORKDIR /app
 
-# Step 3: Copy the go.mod and go.sum files to download dependencies
+# Copy go.mod and go.sum files
 COPY go.mod go.sum ./
 
-# Step 4: Download dependencies
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
 RUN go mod download
 
-# Step 5: Copy the rest of the application code
+# Copy the source code into the container
 COPY . .
 
-# Step 6: Build the Go app
-RUN go build -o main .
+# Build the Go app
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main ./path/to/your/app
 
-# Step 7: Use a minimal image for running the app
+# Start a new stage from scratch
 FROM alpine:latest
 
-# Step 8: Install certificates (required for database connections)
-RUN apk --no-cache add ca-certificates
-
-# Step 9: Set working directory
 WORKDIR /root/
 
-# Step 10: Copy the binary from the build stage
-COPY --from=build /app/main .
+# Copy the Pre-built binary file from the previous stage
+COPY --from=builder /app/main .
 
-# Step 11: Copy the .env file (if any) to the container (optional)
-COPY .env .env
-
-# Step 12: Expose the port for the app
+# Expose port 8080 to the outside world
 EXPOSE 8080
 
-# Step 13: Command to run the executable
+# Command to run the executable
 CMD ["./main"]
