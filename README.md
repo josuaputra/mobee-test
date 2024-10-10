@@ -67,3 +67,4 @@ Konfigurasi ingress memungkinkan lalu lintas eksternal mencapai aplikasi Go. Kom
 - **AWS EKS**: Kami menggunakan AWS EKS sebagai orkestrasi untuk aplikasi kami. 
 - **CI/CD**: Untuk CI/CD, kami memisahkan langkah-langkah untuk membangun dan mendeploy aplikasi.
 - **Kustomize**: Kami menggunakan Kustomize untuk mengelola konfigurasi Kubernetes dan mempermudah proses deployment.
+- **Certificate**: Certificate gagal di create karena tidak ada domain/dsn yang bisa digunakan untuk verifikasi untuk melakukan challenge terhadap certificate terkait
