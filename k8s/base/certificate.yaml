@@ -5,7 +5,7 @@ metadata:
 spec:
   secretName: my-app-tls-secret
   dnsNames:
-    - my-app.example.com
+    - my-app.josua-test.com
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer

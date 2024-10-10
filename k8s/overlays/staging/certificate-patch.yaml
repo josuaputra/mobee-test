@@ -4,5 +4,5 @@ metadata:
   name: my-app-cert
 spec:
   dnsNames:
-    - staging.my-app.example.com
+    - staging.my-app.josua-test.com
   secretName: staging-my-app-tls-secret
